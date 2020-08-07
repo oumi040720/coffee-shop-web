@@ -16,7 +16,7 @@
 				</li>
 				<li class="menu-title mt-2">Tài khoản</li>
 				<li>
-					<a href="">
+					<a href="<c:url value='/admin/user/list?page=1' />">
 						<i class="mdi mdi-tooltip-account"></i>
 						<span>Tài khoản</span>
 					</a>
