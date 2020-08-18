@@ -9,9 +9,6 @@
 		<title>Coffee Shop | Admin | User</title>
 		
 		<%@ include file="/WEB-INF/views/admin/common/css.jsp" %>
-		<style type="text/css">
-		
-		</style>
 	</head>
 	
 	<body>

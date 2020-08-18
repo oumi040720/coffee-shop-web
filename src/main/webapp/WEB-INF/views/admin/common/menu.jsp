@@ -16,6 +16,12 @@
 				</li>
 				<li class="menu-title mt-2">Tài khoản</li>
 				<li>
+					<a href="<c:url value='' />">
+						<i class="mdi mdi-monitor-lock"></i>
+						<span>Vai trò</span>
+					</a>
+				</li>
+				<li>
 					<a href="<c:url value='/admin/user/list?page=1' />">
 						<i class="mdi mdi-tooltip-account"></i>
 						<span>Tài khoản</span>

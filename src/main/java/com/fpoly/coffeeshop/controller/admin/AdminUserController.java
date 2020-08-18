@@ -58,7 +58,7 @@ public class AdminUserController {
 
 		String usersURL = "http://localhost:8080/api/user/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 		String totalPagesURL = "http://localhost:8080/api/user/flag_delete/total_pages?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
-
+		
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
