@@ -94,7 +94,7 @@
         											<td>${customer.username}</td>
         											<td>
         												<c:url var="editURL" value="/admin/customers/edit">
-        													<c:param name="fullname" value="${customer.fullname}" />
+        													<c:param name="id" value="${customer.id}" />
         												</c:url>
         												<a href="${editURL}" class="btn btn-outline-info">
         													<i class="mdi mdi-pencil-outline"></i>

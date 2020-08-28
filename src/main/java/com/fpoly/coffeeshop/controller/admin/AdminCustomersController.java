@@ -93,10 +93,10 @@ public class AdminCustomersController {
 	}
 	
 	@RequestMapping(value = "/edit")
-	public String showUpdatePage(Model model, @RequestParam("fullname") String fullname) {
+	public String showUpdatePage(Model model, @RequestParam("id") Long id) {
 		getUser(model);
 		
-		String url = "http://localhost:8080/api/customers/fullname/" + fullname;
+		String url = "http://localhost:8080/api/customers/id/" + id;
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
