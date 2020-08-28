@@ -28,7 +28,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="">
+					<a href="<c:url value='/admin/customers/list?page=1' />">
 						<i class="mdi mdi-account-multiple"></i>
 						<span> Nhân viên </span>
 					</a>

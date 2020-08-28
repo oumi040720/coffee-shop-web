@@ -20,24 +20,24 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fpoly.coffeeshop.model.Role;
+import com.fpoly.coffeeshop.model.Customers;
 import com.fpoly.coffeeshop.model.User;
 
 @Controller
-@RequestMapping(value = "/admin/user")
-public class AdminUserController {
+@RequestMapping(value = "/admin/customers")
+public class AdminCustomersController {
 
-	public void getRole(Model model) {
-		String url = "http://localhost:8080/api/role/list";
+	public void getUser(Model model) {
+		String url = "http://localhost:8080/api/user/list";
 		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			List<Role> roles = mapper.readValue(result.getBody(), new TypeReference<List<Role>>(){});
+			List<User> users = mapper.readValue(result.getBody(), new TypeReference<List<User>>(){});
 			
-			model.addAttribute("roles", roles);
+			model.addAttribute("users", users);
 		} catch (Exception e) {
 		} 
 	}
@@ -56,8 +56,8 @@ public class AdminUserController {
 			request.setAttribute("alert", alert);
 		}
 
-		String usersURL = "http://localhost:8080/api/user/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/user/flag_delete/total_pages?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String customerURL = "http://localhost:8080/api/customers/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String totalPagesURL = "http://localhost:8080/api/customers/flag_delete/total_pages?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 		
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -65,7 +65,7 @@ public class AdminUserController {
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-		ResponseEntity<String> result = restTemplate.exchange(usersURL, HttpMethod.GET, entity, String.class);
+		ResponseEntity<String> result = restTemplate.exchange(customerURL, HttpMethod.GET, entity, String.class);
 		
 		request.setAttribute("page", page);
 		request.setAttribute("limit", limit);
@@ -73,56 +73,55 @@ public class AdminUserController {
 		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			List<User> users = mapper.readValue(result.getBody(), new TypeReference<List<User>>(){});
-			request.setAttribute("users", users);
-			System.out.println(users);
+			List<Customers> customers = mapper.readValue(result.getBody(), new TypeReference<List<Customers>>(){});
+			request.setAttribute("customers", customers);
+			//System.out.println(customers);
 		} catch (Exception e) {
 		}
 		
-		return "admin/user/list";
-//		return "admin/usser/dashboard";
+		return "admin/customers/list";
 	}
 	
 	@RequestMapping(value = "/add")
 	public String showAddPage(Model model) {
-		getRole(model);
+		getUser(model);
 		
 		model.addAttribute("check", false);
-		model.addAttribute("user", new User());
+		model.addAttribute("customers", new Customers());
 		
-		return "admin/user/edit";
+		return "admin/customers/edit";
 	}
 	
 	@RequestMapping(value = "/edit")
-	public String showUpdatePage(Model model, @RequestParam("username") String username) {
-		getRole(model);
+	public String showUpdatePage(Model model, @RequestParam("fullname") String fullname) {
+		getUser(model);
 		
-		String url = "http://localhost:8080/api/user/username/" + username;
+		String url = "http://localhost:8080/api/customers/fullname/" + fullname;
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
-		ResponseEntity<User> user = restTemplate.getForEntity(url, User.class);
+		ResponseEntity<Customers> customers = restTemplate.getForEntity(url, Customers.class);
 		
 		model.addAttribute("check", true);
-		model.addAttribute("user", user.getBody());
+		model.addAttribute("customers", customers.getBody());
 		
-		return "admin/user/edit";
+		return "admin/customers/edit";
 	}
 	
 	@RequestMapping(value = "/save")
-	public String save(Model model, @ModelAttribute User user) {
-		String url = "http://localhost:8080/api/user";
+	public String save(Model model, @ModelAttribute Customers customers) {
+		String url = "http://localhost:8080/api/customers";
 		String message = "";
 		String alert = "danger";
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
-		user.setFlagDelete(false);
+		customers.setFlagDelete(false);
 		
-		if (user.getId() == null) {
+		if (customers.getId() == null) {
 			url += "/insert";
 			
-			Boolean result = restTemplate.postForObject(url, user, Boolean.class);
+			Boolean result = restTemplate.postForObject(url, customers, Boolean.class);
 			
 			if (result) {
 				message = "insert success";
@@ -131,10 +130,10 @@ public class AdminUserController {
 				message = "insert fail";
 			}
 		} else {
-			url += "/update?id=" + user.getId();
+			url += "/update?id=" + customers.getId();
 			
 			try {
-				restTemplate.put(url, user);
+				restTemplate.put(url, customers);
 				
 				message = "update success";
 				alert = "success";
@@ -146,25 +145,24 @@ public class AdminUserController {
 		model.addAttribute("message", message);
 		model.addAttribute("alert", alert);
 		
-		return "redirect:/admin/user/list?page=1";
+		return "redirect:/admin/customers/list?page=1";
 	}
 
 	@RequestMapping(value = "/delete")
-	public String delete(Model model, @RequestParam("username") String username) {
-		String url = "http://localhost:8080/api/user/username/" + username;
+	public String delete(Model model, @RequestParam("fullname") String fullname) {
+		String url = "http://localhost:8080/api/customers/fullname/" + fullname;
 		String message = "";
 		String alert = "danger";
 		
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<User> reusult = restTemplate.getForEntity(url, User.class);
-		User user = reusult.getBody();
+		ResponseEntity<Customers> reusult = restTemplate.getForEntity(url, Customers.class);
+		Customers customers = reusult.getBody();
 		
-		String deleteURL = "http://localhost:8080/api/user/update?id=" + user.getId();
+		String deleteURL = "http://localhost:8080/api/customers/update?id=" + customers.getId();
 		
 		try {
-			user.setFlagDelete(true);
-			user.setPassword("123");
-			restTemplate.put(deleteURL, user);
+			customers.setFlagDelete(true);
+			restTemplate.put(deleteURL, customers);
 			
 			message = "delete success";
 			alert = "success";
@@ -175,7 +173,7 @@ public class AdminUserController {
 		model.addAttribute("message", message);
 		model.addAttribute("alert", alert);
 		
-		return "redirect:/admin/user/list?page=1";
+		return "redirect:/admin/customers/list?page=1";
 	}
 	
 	
@@ -187,7 +185,7 @@ public class AdminUserController {
 		model.addAttribute("key", key);
 		model.addAttribute("page", page);
 		
-		return "redirect:/admin/user/search";
+		return "redirect:/admin/customers/search";
 	}
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -197,8 +195,8 @@ public class AdminUserController {
 		String flagDelete = "false";
 		String limit = "10";
 		
-		String usersURL = "http://localhost:8080/api/user/flag_delete/search/list?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/user/flag_delete/search/total_pages?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String usersURL = "http://localhost:8080/api/customers/flag_delete/search/list?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String totalPagesURL = "http://localhost:8080/api/customers/flag_delete/search/total_pages?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -207,7 +205,7 @@ public class AdminUserController {
 		
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 		ResponseEntity<String> result = restTemplate.exchange(usersURL, HttpMethod.GET, entity, String.class);
-		
+		System.out.println(result);
 		request.setAttribute("key", key);
 		request.setAttribute("page", page);
 		request.setAttribute("limit", limit);
@@ -215,12 +213,11 @@ public class AdminUserController {
 		
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			List<User> users = mapper.readValue(result.getBody(), new TypeReference<List<User>>(){});
-			request.setAttribute("users", users);
+			List<Customers> customers = mapper.readValue(result.getBody(), new TypeReference<List<Customers>>(){});
+			request.setAttribute("customers", customers);
 		} catch (Exception e) {
 		}
 		
-		return "admin/user/search";
+		return "admin/customers/search";
 	}
-	
 }
