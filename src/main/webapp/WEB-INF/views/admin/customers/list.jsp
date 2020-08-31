@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Coffee Shop | Admin | User</title>
+		<title>Coffee Shop | Admin | Customers</title>
 		
 		<%@ include file="/WEB-INF/views/admin/common/css.jsp" %>
 	</head>
@@ -101,7 +101,7 @@
         												</a>
         												
         												<c:url var="deleteURL" value="/admin/customers/delete">
-        													<c:param name="fullname" value="${customer.fullname}" />
+        													<c:param name="id" value="${customer.id}" />
         												</c:url>
         												<a href="${deleteURL}" class="btn btn-outline-danger">
         													<i class=" mdi mdi-window-close"></i>

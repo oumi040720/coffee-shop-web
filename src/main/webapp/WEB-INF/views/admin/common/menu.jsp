@@ -54,7 +54,7 @@
 				</li>
 				<li class="menu-title mt-2">Đặt hàng</li>
 				<li>
-					<a href="">
+					<a href="<c:url value='/admin/order/list?page=1' />">
 						<i class="mdi mdi-shopping"></i>
 						<span> Hóa đơn </span>
 					</a>
