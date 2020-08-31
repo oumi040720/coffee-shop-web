@@ -22,13 +22,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpoly.coffeeshop.model.Customers;
 import com.fpoly.coffeeshop.model.User;
+import com.fpoly.coffeeshop.util.DomainUtil;
 
 @Controller
 @RequestMapping(value = "/admin/customers")
 public class AdminCustomersController {
+	
+	private String getDomain() {
+		return DomainUtil.getDoamin();
+	}
 
 	public void getUser(Model model) {
-		String url = "http://localhost:8080/api/user/list";
+		String url = getDomain() +"/user/list";
 		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
@@ -56,8 +61,8 @@ public class AdminCustomersController {
 			request.setAttribute("alert", alert);
 		}
 
-		String customerURL = "http://localhost:8080/api/customers/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/customers/flag_delete/total_pages?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String customerURL = getDomain()+"/customers/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String totalPagesURL = getDomain()+"/customers/flag_delete/total_pages?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 		
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -96,7 +101,7 @@ public class AdminCustomersController {
 	public String showUpdatePage(Model model, @RequestParam("id") Long id) {
 		getUser(model);
 		
-		String url = "http://localhost:8080/api/customers/id/" + id;
+		String url = getDomain()+"/customers/id/" + id;
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
@@ -110,7 +115,7 @@ public class AdminCustomersController {
 	
 	@RequestMapping(value = "/save")
 	public String save(Model model, @ModelAttribute Customers customers) {
-		String url = "http://localhost:8080/api/customers";
+		String url = getDomain()+"/customers";
 		String message = "";
 		String alert = "danger";
 		
@@ -150,7 +155,7 @@ public class AdminCustomersController {
 
 	@RequestMapping(value = "/delete")
 	public String delete(Model model, @RequestParam("id") Long id) {
-		String url = "http://localhost:8080/api/customers/id/" + id;
+		String url =getDomain()+ "/customers/id/" + id;
 		String message = "";
 		String alert = "danger";
 		
@@ -158,7 +163,7 @@ public class AdminCustomersController {
 		ResponseEntity<Customers> reusult = restTemplate.getForEntity(url, Customers.class);
 		Customers customers = reusult.getBody();
 		
-		String deleteURL = "http://localhost:8080/api/customers/update?id=" + customers.getId();
+		String deleteURL = getDomain()+"/customers/update?id=" + customers.getId();
 		
 		try {
 			customers.setFlagDelete(true);
@@ -195,8 +200,8 @@ public class AdminCustomersController {
 		String flagDelete = "false";
 		String limit = "10";
 		
-		String customerURL = "http://localhost:8080/api/customers/flag_delete/search/list?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/customers/flag_delete/search/total_pages?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String customerURL = getDomain()+"/customers/flag_delete/search/list?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String totalPagesURL = getDomain()+ "/customers/flag_delete/search/total_pages?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 
 		RestTemplate restTemplate = new RestTemplate();
 

@@ -22,13 +22,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpoly.coffeeshop.model.Role;
 import com.fpoly.coffeeshop.model.User;
+import com.fpoly.coffeeshop.util.DomainUtil;
 
 @Controller
 @RequestMapping(value = "/admin/user")
 public class AdminUserController {
 
-	public void getRole(Model model) {
-		String url = "http://localhost:8080/api/role/list";
+	private String getDomain() {
+		return DomainUtil.getDoamin();
+	}
+	
+	private void getRole(Model model) {
+		String url = getDomain() + "/role/list";
 		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
@@ -56,8 +61,8 @@ public class AdminUserController {
 			request.setAttribute("alert", alert);
 		}
 
-		String usersURL = "http://localhost:8080/api/user/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/user/flag_delete/total_pages?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String usersURL = getDomain() + "/user/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String totalPagesURL = getDomain() + "/user/flag_delete/total_pages?flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 		
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -75,12 +80,10 @@ public class AdminUserController {
 			ObjectMapper mapper = new ObjectMapper();
 			List<User> users = mapper.readValue(result.getBody(), new TypeReference<List<User>>(){});
 			request.setAttribute("users", users);
-			System.out.println(users);
 		} catch (Exception e) {
 		}
 		
 		return "admin/user/list";
-//		return "admin/usser/dashboard";
 	}
 	
 	@RequestMapping(value = "/add")
@@ -97,7 +100,7 @@ public class AdminUserController {
 	public String showUpdatePage(Model model, @RequestParam("username") String username) {
 		getRole(model);
 		
-		String url = "http://localhost:8080/api/user/username/" + username;
+		String url =  getDomain() + "/user/username/" + username;
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
@@ -111,7 +114,7 @@ public class AdminUserController {
 	
 	@RequestMapping(value = "/save")
 	public String save(Model model, @ModelAttribute User user) {
-		String url = "http://localhost:8080/api/user";
+		String url = getDomain() + "/user";
 		String message = "";
 		String alert = "danger";
 		
@@ -151,7 +154,7 @@ public class AdminUserController {
 
 	@RequestMapping(value = "/delete")
 	public String delete(Model model, @RequestParam("username") String username) {
-		String url = "http://localhost:8080/api/user/username/" + username;
+		String url = getDomain() + "/user/username/" + username;
 		String message = "";
 		String alert = "danger";
 		
@@ -159,11 +162,11 @@ public class AdminUserController {
 		ResponseEntity<User> reusult = restTemplate.getForEntity(url, User.class);
 		User user = reusult.getBody();
 		
-		String deleteURL = "http://localhost:8080/api/user/update?id=" + user.getId();
+		String deleteURL = getDomain() + "/user/update?id=" + user.getId();
 		
 		try {
 			user.setFlagDelete(true);
-			user.setPassword("123");
+			user.setPassword("123@123zxCV@");
 			restTemplate.put(deleteURL, user);
 			
 			message = "delete success";
@@ -197,8 +200,8 @@ public class AdminUserController {
 		String flagDelete = "false";
 		String limit = "10";
 		
-		String usersURL = "http://localhost:8080/api/user/flag_delete/search/list?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/user/flag_delete/search/total_pages?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String usersURL = getDomain() + "/user/flag_delete/search/list?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
+		String totalPagesURL = getDomain() + "/user/flag_delete/search/total_pages?key=" + key + "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 
 		RestTemplate restTemplate = new RestTemplate();
 

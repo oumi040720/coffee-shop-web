@@ -31,13 +31,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpoly.coffeeshop.model.Customers;
 import com.fpoly.coffeeshop.model.Order;
 import com.fpoly.coffeeshop.model.OrderDetail;
+import com.fpoly.coffeeshop.util.DomainUtil;
 
 @Controller
 @RequestMapping(value = "/admin/order")
 public class AdminOrderController {
 
+	private String getDomain() {
+		return DomainUtil.getDoamin();
+	}
+	
 	public void getCustomers(Model model) {
-		String url = "http://localhost:8080/api/customers/list";
+		String url = getDomain()+"/customers/list";
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
@@ -66,9 +71,9 @@ public class AdminOrderController {
 			request.setAttribute("alert", alert);
 		}
 
-		String orderURL = "http://localhost:8080/api/order/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page
+		String orderURL =  getDomain()+"/order/flag_delete/list?flag_delete=" + flagDelete + "&page=" + page
 				+ "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/order/flag_delete/total_pages?flag_delete=" + flagDelete
+		String totalPagesURL =  getDomain()+"/order/flag_delete/total_pages?flag_delete=" + flagDelete
 				+ "&page=" + page + "&limit=" + limit;
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -108,7 +113,7 @@ public class AdminOrderController {
 	public String showUpdatePage(Model model, @RequestParam("id") Long id) {
 		getCustomers(model);
 
-		String url = "http://localhost:8080/api/order/id/" + id;
+		String url =  getDomain()+"/order/id/" + id;
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -123,7 +128,7 @@ public class AdminOrderController {
 	@GetMapping(value = "/orderDetail")
 	@ResponseBody
 	public List<OrderDetail> fetcOrderDetail(@RequestParam("orderCode") String orderCode) throws URISyntaxException, JsonParseException, JsonMappingException, IOException {
-		String url = "http://localhost:8080/api/orderdetail/list/search_or/" + orderCode;
+		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode;
 		RestTemplate restTemplate = new RestTemplate();
 		RequestEntity<String> req = new RequestEntity(HttpMethod.GET, new URI(url));
 		ResponseEntity<String> res = restTemplate.exchange(req, String.class);		
@@ -134,7 +139,7 @@ public class AdminOrderController {
 
 	@RequestMapping(value = "/save")
 	public String save(Model model, @ModelAttribute Order orders) {
-		String url = "http://localhost:8080/api/order";
+		String url =  getDomain()+"/order";
 		String message = "";
 		String alert = "danger";
 
@@ -174,7 +179,7 @@ public class AdminOrderController {
 
 	@RequestMapping(value = "/delete")
 	public String delete(Model model, @RequestParam("id") Long id) {
-		String url = "http://localhost:8080/api/order/id/" + id;
+		String url =  getDomain()+"/order/id/" + id;
 		String message = "";
 		String alert = "danger";
 
@@ -182,7 +187,7 @@ public class AdminOrderController {
 		ResponseEntity<Order> reusult = restTemplate.getForEntity(url, Order.class);
 		Order orders = reusult.getBody();
 
-		String deleteURL = "http://localhost:8080/api/order/update?id=" + orders.getId();
+		String deleteURL =  getDomain()+"/order/update?id=" + orders.getId();
 
 		try {
 			orders.setFlagDelete(true);
@@ -218,9 +223,9 @@ public class AdminOrderController {
 		String flagDelete = "false";
 		String limit = "10";
 
-		String orderURL = "http://localhost:8080/api/order/flag_delete/search_o/list?key=" + key + "&flag_delete="
+		String orderURL =  getDomain()+"/order/flag_delete/search_o/list?key=" + key + "&flag_delete="
 				+ flagDelete + "&page=" + page + "&limit=" + limit;
-		String totalPagesURL = "http://localhost:8080/api/order/flag_delete/search_o/total_pages?key=" + key
+		String totalPagesURL =  getDomain()+"/order/flag_delete/search_o/total_pages?key=" + key
 				+ "&flag_delete=" + flagDelete + "&page=" + page + "&limit=" + limit;
 
 		RestTemplate restTemplate = new RestTemplate();

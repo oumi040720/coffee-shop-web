@@ -106,7 +106,13 @@
 												<td><a href="#"
 													class="btn btn-outline-info btn-order-detail" data-id="${order.orderCode}"> <i
 														class=" typcn typcn-edit"></i>
-												</a> <c:url var="editURL" value="/admin/order/edit">
+												</a>
+												 <c:url var="editURL" value="/admin/orderdetail/edit">
+														<c:param name="orderCode" value="${order.orderCode}" />
+													</c:url> <a href="${editURL}" class="btn btn-outline-info"> <i
+														class="typcn typcn-edit"></i>
+												</a> 
+												 <c:url var="editURL" value="/admin/order/edit">
 														<c:param name="id" value="${order.id}" />
 													</c:url> <a href="${editURL}" class="btn btn-outline-info"> <i
 														class="mdi mdi-pencil-outline"></i>
