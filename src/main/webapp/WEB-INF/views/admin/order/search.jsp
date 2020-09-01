@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Coffee Shop | Admin | Customers</title>
+		<title>Coffee Shop | Admin | Order</title>
 		
 		<%@ include file="/WEB-INF/views/admin/common/css.jsp" %>
 	</head>
@@ -25,11 +25,11 @@
         						<div class="page-title-right">
         							<ol class="breadcrumb m-0">
         								<li class="breadcrumb-item"><a href="javascript: void(0);">Uplon</a></li>
-        								<li class="breadcrumb-item"><a href="javascript: void(0);">Nhân Viên</a></li>
+        								<li class="breadcrumb-item"><a href="javascript: void(0);">Hóa Đơn</a></li>
         								<li class="breadcrumb-item active">Danh sách</li>
         							</ol>
         						</div>
-        						<h4 class="page-title">Danh sách nhân viên</h4>
+        						<h4 class="page-title">Danh sách hóa đơn</h4>
         					</div>
         				</div>
         			</div>
@@ -39,11 +39,11 @@
         						<div>
         							<div class="row">
         								<div class="col-lg-8">
-        									<a href="<c:url value='/admin/customers/add' />" class="btn btn-success">Thêm</a>
+        									<a href="<c:url value='/admin/order/add' />" class="btn btn-success">Thêm</a>
         								</div>
         								<div class="col-lg-4">
         									<div class="d-none d-sm-block">
-        										<form action="<c:url value='/admin/customers/search' />" class="app-search" method="post">
+        										<form action="<c:url value='/admin/order/search' />" class="app-search" method="post">
         											<div class="app-search-box">
         												<div class="input-group">
         													<input type="text" class="form-control" placeholder="Search...">
@@ -71,36 +71,43 @@
 	        						</div>
 	        						<br>
         						</c:if>
-        						<form id="form-submit" action="<c:url value='/admin/customers/search' />" method="get">
+        						<form id="form-submit" action="<c:url value='/admin/order/search' />" method="get">
         							<table class="table table-bordered">
         								<thead>
         									<tr class="thead-dark">
+        										<th>Ngày Đặt</th>
+        										<th>Mã Hóa Đơn</th>
+        										<th>Trạng Thái</th>
         										<th>Họ Và Tên</th>
-        										<th>Email</th>
-        										<th>Địa Chỉ</th>
-        										<th>Số Điện Thoại</th>
-        										<th>Tên Tài Khoản</th>
         										<th>#</th>
         									</tr>
         								</thead>
         								<tbody>
-        									<c:forEach var="customer" items="${customers}">
+        									<c:forEach var="order" items="${orders}">
         										<tr>
-        											<td>${customer.fullname}</td>
-        											<td>${customer.email}</td>
-        											<td>${customer.phone}</td>
-        											<td>${customer.address}</td>
-        											<td>${customer.username}</td>
+        											<td>${order.orderDate}</td>
+        											<td>${order.orderCode}</td>
         											<td>
-        												<c:url var="editURL" value="/admin/customers/edit">
-        													<c:param name="fullname" value="${customer.fullname}" />
+        											<c:if test="${order.status == 1}">Đã Giao</c:if>
+        											<c:if test="${order.status == 0}">Chưa Giao</c:if>
+        											</td>
+        											<td>${order.fullname}</td>
+        											<td>
+        												<c:url var="editURL" value="/admin/order/edit">
+        													<c:param name="id" value="${order.id}" />
+        												</c:url>
+        												<a href="${editURL}" class="btn btn-outline-info">
+        													<i class=" typcn typcn-edit"></i>
+        												</a>
+        												<c:url var="editURL" value="/admin/order/edit">
+        													<c:param name="id" value="${order.id}" />
         												</c:url>
         												<a href="${editURL}" class="btn btn-outline-info">
         													<i class="mdi mdi-pencil-outline"></i>
         												</a>
         												
-        												<c:url var="deleteURL" value="/admin/customers/delete">
-        													<c:param name="fullname" value="${customer.fullname}" />
+        												<c:url var="deleteURL" value="/admin/order/delete">
+        													<c:param name="id" value="${order.id}" />
         												</c:url>
         												<a href="${deleteURL}" class="btn btn-outline-danger">
         													<i class=" mdi mdi-window-close"></i>

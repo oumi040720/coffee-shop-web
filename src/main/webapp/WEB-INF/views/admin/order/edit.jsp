@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Coffee Shop | Admin | Customers</title>
+		<title>Coffee Shop | Admin | Order</title>
 		
 		<%@ include file="/WEB-INF/views/admin/common/css.jsp" %>
 	</head>
@@ -26,7 +26,7 @@
         						<div class="page-title-right">
         							<ol class="breadcrumb m-0">
         								<li class="breadcrumb-item"><a href="javascript: void(0);">Uplon</a></li>
-        								<li class="breadcrumb-item"><a href="javascript: void(0);">Nhân Viên</a></li>
+        								<li class="breadcrumb-item"><a href="javascript: void(0);">Hóa Đơn</a></li>
         								<c:if test="${check}">
         									<li class="breadcrumb-item active">Cập nhật</li>
         								</c:if>
@@ -36,10 +36,10 @@
         							</ol>
         						</div>
         						<c:if test="${check}">
-        							<h4 class="page-title">Cập nhật nhân viên</h4>
+        							<h4 class="page-title">Cập nhật hóa đơn</h4>
         						</c:if>
         						<c:if test="${!check}">
-        							<h4 class="page-title">Thêm mới nhân viên</h4>
+        							<h4 class="page-title">Thêm mới hóa đơn</h4>
         						</c:if>
         					</div>
         				</div>
@@ -48,66 +48,59 @@
         				<div class="col-lg-12">
         					<div class="card-box">
         						<div class="row">
-        							<c:url var="action" value="/admin/customers/save" />
-        							<form:form action="${action}" modelAttribute="customers" cssClass="col-lg-12" 
+        							<c:url var="action" value="/admin/order/save" />
+        							<form:form action="${action}" modelAttribute="orders" cssClass="col-lg-12" 
         									onsubmit="return checkValidated()" data-parsley-validate="" novalidate="">
+        								<div class="form-group row">
+        									<label class="col-lg-2 col-form-label">
+        										Ngày Đặt <span class="text-danger"> (*) </span>
+        									</label>
+        									<div class="col-lg-10">
+        										<form:input path="orderDate" cssClass="form-control" type="date" id="orderDate" value="${orders.orderDate}"/>
+        										<ul class="parsley-errors-list filled">
+        											<li id="warningOrderDate" class="parsley-required"></li>
+        										</ul>
+        									</div>
+        								</div>
+        								<div class="form-group row">
+        									<label class="col-lg-2 col-form-label">
+        										Mã Hóa Đơn <span class="text-danger"> (*) </span>
+        									</label>
+        									<div class="col-lg-10">
+        										<form:input path="orderCode" cssClass="form-control"/>
+        										<ul class="parsley-errors-list filled">
+        											<li id="warningOrderCode" class="parsley-required"></li>
+        										</ul>
+        									</div>
+        								</div>
+        								<div class="form-group row">
+        									<label class="col-lg-2 col-form-label">
+        										Trạng Thái <span class="text-danger"> (*) </span>
+        									</label>
+        									<div class="col-lg-10">
+        										<form:select path="status" cssClass="form-control">
+        											<form:option value="">-- Lựa chọn trạng thái --</form:option>
+        												<form:option value="1">Đã Giao</form:option>
+        												<form:option value="0">Chưa Giao</form:option>
+        										</form:select>
+        										<ul class="parsley-errors-list filled">
+        											<li id="warningStatus" class="parsley-required"></li>
+        										</ul>
+        									</div>
+        								</div>  								
         								<div class="form-group row">
         									<label class="col-lg-2 col-form-label">
         										Họ Và Tên <span class="text-danger"> (*) </span>
         									</label>
         									<div class="col-lg-10">
-        										<form:input path="fullname" cssClass="form-control"/>
-        										<ul class="parsley-errors-list filled">
-        											<li id="warningFullname" class="parsley-required"></li>
-        										</ul>
-        									</div>
-        								</div>
-        								<div class="form-group row">
-        									<label class="col-lg-2 col-form-label">
-        										Email <span class="text-danger"> (*) </span>
-        									</label>
-        									<div class="col-lg-10">
-        										<form:input path="email" cssClass="form-control"/>
-        										<ul class="parsley-errors-list filled">
-        											<li id="warningEmail" class="parsley-required"></li>
-        										</ul>
-        									</div>
-        								</div>
-        								<div class="form-group row">
-        									<label class="col-lg-2 col-form-label">
-        										Địa Chỉ <span class="text-danger"> (*) </span>
-        									</label>
-        									<div class="col-lg-10">
-        										<form:input path="address" cssClass="form-control"/>
-        										<ul class="parsley-errors-list filled">
-        											<li id="warningAddress" class="parsley-required"></li>
-        										</ul>
-        									</div>
-        								</div>
-        								<div class="form-group row">
-        									<label class="col-lg-2 col-form-label">
-        										Số Điện Thoại <span class="text-danger"> (*) </span>
-        									</label>
-        									<div class="col-lg-10">
-        										<form:input path="phone" cssClass="form-control" type="number"/>
-        										<ul class="parsley-errors-list filled">
-        											<li id="warningPhone" class="parsley-required"></li>
-        										</ul>
-        									</div>
-        								</div>
-        								<div class="form-group row">
-        									<label class="col-lg-2 col-form-label">
-        										Tên Tài Khoản <span class="text-danger"> (*) </span>
-        									</label>
-        									<div class="col-lg-10">
-        										<form:select path="username" cssClass="form-control">
-        											<form:option value="">-- Lựa chọn tài khoản --</form:option>
-        											<<c:forEach items="${users}" var="user">
-        												<form:option value="${user.username}">${role.username}</form:option>
+        										<form:select path="fullname" cssClass="form-control">
+        											<form:option value="">-- Lựa chọn họ tên --</form:option>
+        											<<c:forEach items="${customers}" var="customer">
+        												<form:option value="${customer.fullname}">${customer.fullname}</form:option>
         											</c:forEach>
         										</form:select>
         										<ul class="parsley-errors-list filled">
-        											<li id="warningUsername" class="parsley-required"></li>
+        											<li id="warningFullname" class="parsley-required"></li>
         										</ul>
         									</div>
         								</div>
@@ -138,20 +131,48 @@
         	<%@ include file="/WEB-INF/views/admin/common/js.jsp" %>
         	<script type="text/javascript">
         		var checkValidated = function() {
+        			var orderDate = $('#orderDate').val();
+        			var orderCode = $('#orderCode').val();
+        			var status = $('#status').val();
         			var fullname = $('#fullname').val();
-        			var email = $('#email').val();
-        			var phone = $('#phone').val();
-        			var address = $('#address').val();
-        			var username = $('#username').val();
         			
+        			var checkOrderDate = false;
+        			var checkOrderCode = false;
+        			var checkStatus = false;
         			var checkFullname = false;
-        			var checkEmail = false;
-        			var checkPhone = false;
-        			var checkAddress = false;
-        			var checkUsername = false;
         			
-        			var pattten = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-        			
+        			console.log(orderDate)
+					 if (orderDate != "") {						 
+						$('#warningOrderDate').text('');
+						console.log("hello")
+						$('#orderDate').removeClass('parsley-error');		
+						checkOrderDate= true;
+					} else {
+						$('#orderDate').addClass('parsley-error');
+						$('#warningOrderDate').text('Không được bỏ trống Ngày Đặt!');
+						
+					} 
+					
+					if (orderCode.trim().length > 0) {							
+						$('#warningOrderCode').text('');
+						$('#orderCode').removeClass('parsley-error');
+						checkOrderCode = true;						
+					}
+					else {
+						$('#orderCode').addClass('parsley-error');
+						$('#warningOrderCode').text('Không được bỏ trống MÃ ĐẶT HÀNG!');
+						
+					}
+					
+					if (status.trim().length > 0) {
+						$('#warningStatus').text('');
+						$('#status').removeClass('parsley-error');
+						checkStatus = true;
+					} else {
+						$('#status').addClass('parsley-error');
+						$('#warningStatus').text('Không được bỏ trống TRẠNG  THÁI!');
+					} 
+					
 					if (fullname.trim().length > 0) {
 						$('#warningFullname').text('');
 						$('#fullname').removeClass('parsley-error');
@@ -161,52 +182,8 @@
 						$('#warningFullname').text('Không được bỏ trống HỌ VÀ TÊN!');
 					}
 					
-					if (email.trim().length > 0) {							
-						$('#warningEmail').text('');
-						$('#email').removeClass('parsley-error');
-						checkEmail = true;
-						if(email.match(pattten)){
-						
-					}
-					else {	
-						$('#email').addClass('parsley-error');
-						$('#warningEmail').text('Không nhập đúng định dạng EMAIL!');
-					}}
-					else {
-						$('#email').addClass('parsley-error');
-						$('#warningEmail').text('Không được bỏ trống EMAIL!');
-						
-					}
 					
-					if (address.trim().length > 0) {
-						$('#warningAddress').text('');
-						$('#address').removeClass('parsley-error');
-						checkAddress = true;
-					} else {
-						$('#address').addClass('parsley-error');
-						$('#warningAddress').text('Không được bỏ trống ĐỊA CHỈ');
-					}
-					
-					if (phone.trim().length > 0) {
-						$('#warningPhone').text('');
-						$('#phone').removeClass('parsley-error');
-						checkPhone = true;
-					} else {
-						$('#phone').addClass('parsley-error');
-						$('#warningPhone').text('Không được bỏ trống SỐ ĐIỆN THOẠI!');
-					}
-					
-					if (username.trim().length > 0) {
-						$('#warningUsername').text('');
-						$('#username').removeClass('parsley-error');
-						checkUsername = true;
-					} else {
-						$('#username').addClass('parsley-error');
-						$('#warningUsername').text('Không được bỏ trống TÊN TÀI KHOẢN!');
-					}
-					
-					
-					if (checkFullname && checkEmail && checkPhone && checkAddress && checkUsername) {
+					if ( orderDate && checkOrderCode && checkStatus && checkFullname) {
 						return true;
 					} else {
 						return false;
