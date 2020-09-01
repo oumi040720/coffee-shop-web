@@ -1,7 +1,12 @@
 package com.fpoly.coffeeshop.controller.admin;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,19 +44,27 @@ public class AdminOrderDetailController {
 		}
 	}
 	
+	// THIÊU QUY TRÌNH
+	// CLICK CHI TIẾT HÓA ĐƠN >> DANH SÁCH CHI TIẾT HÓA ĐƠN(THIẾU) >> CHỈNH SỬA CHI TIẾT HÓA ĐƠN
+	
 	@RequestMapping(value = "/edit")
 	public String showUpdatePage(Model model, @RequestParam("orderCode") String orderCode) {
 		getMenu(model);
 
-		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode;
+		// cái này trả về list orderDetails, trong khi edit thì chỉ được 1 đối tượng chứ không phải là 1 list
+		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode; 
 
 		RestTemplate restTemplate = new RestTemplate();
 
-		ResponseEntity<OrderDetail> orderdetails = restTemplate.getForEntity(url, OrderDetail.class);
-
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		
+		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+		ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		
 		model.addAttribute("check", true);
-		model.addAttribute("orderdetails", orderdetails.getBody());
-
+//		model.addAttribute("orderdetails", null);
+		
 		return "admin/orderdetail/edit";
 	}
 }
