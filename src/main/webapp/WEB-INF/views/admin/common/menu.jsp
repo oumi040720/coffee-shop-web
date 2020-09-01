@@ -16,7 +16,7 @@
 				</li>
 				<li class="menu-title mt-2">Tài khoản</li>
 				<li>
-					<a href="<c:url value='' />">
+					<a href="<c:url value='/admin/role/list' />">
 						<i class="mdi mdi-monitor-lock"></i>
 						<span>Vai trò</span>
 					</a>

@@ -109,7 +109,7 @@
 					if (roleName.trim().length > 0) {
 						$('#warningRoleName').text('');
 						$('#roleName').removeClass('parsley-error');
-						checkUsername = true;
+						checkRoleName = true;
 					} else {
 						$('#roleName').addClass('parsley-error');
 						$('#warningRoleName').text('Không được bỏ trống TÊN VAI TRÒ!');
@@ -118,7 +118,7 @@
 					if (roleCode.trim().length > 0) {
 						$('#warningRoleCode').text('');
 						$('#roleCode').removeClass('parsley-error');
-						checkPassword = true;
+						checkRoleCode = true;
 					} else {
 						$('#roleCode').addClass('parsley-error');
 						$('#warningRoleCode').text('Không được bỏ trống MÃ VAI TRÒ!');

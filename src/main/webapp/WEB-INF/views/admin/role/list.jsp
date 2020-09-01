@@ -40,9 +40,7 @@
         				<div class="col-lg-12">
         					<div class="card-box">
         						<div>
-        							<div class="row">
-        								<a href="<c:url value='/admin/role/add' />" class="btn btn-success">Thêm</a>
-        							</div>
+        							<a href="<c:url value='/admin/role/add' />" class="btn btn-success">Thêm</a>
         						</div>
         						<br>
         						<c:if test="${not empty message}">
@@ -103,8 +101,6 @@
         	<!-- Table datatable js -->
         	<script src="<c:url value='/template/admin/libs/datatables/jquery.dataTables.min.js' />"></script>
         	<script src="<c:url value='/template/admin/libs/datatables/dataTables.bootstrap4.min.js' />"></script>
-        	
-        	<script src="<c:url value='/template/admin/js/pages/datatables.init.js' />"></script>
         </div>
 	</body>
 </html>
