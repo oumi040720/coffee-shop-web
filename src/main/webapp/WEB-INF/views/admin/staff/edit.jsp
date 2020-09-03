@@ -49,8 +49,8 @@
         					<div class="card-box">
         						<div class="row">
         							<c:url var="action" value="/admin/staff/save" />
-        							<form:form action="${action}" modelAttribute="user" cssClass="col-lg-12" 
-        									onsubmit="return checkValidated()" data-parsley-validate="" novalidate="">
+        							<form:form action="${action}" modelAttribute="staff" cssClass="col-lg-12" 
+        									data-parsley-validate="" novalidate="">
         								<div class="form-group row">
         									<label class="col-lg-2 col-form-label">
         										Tên nhân viên <span class="text-danger"> (*) </span>
@@ -122,7 +122,7 @@
         										Tên tài khoản <span class="text-danger"> (*) </span>
         									</label>
         									<div class="col-lg-10">
-        										<form:select path="roleCode" cssClass="form-control">
+        										<form:select path="username" cssClass="form-control">
         											<form:option value="">-- Lựa chọn tài khoản --</form:option>
         											<<c:forEach items="${users}" var="user">
         												<form:option value="${user.username}">${user.username}</form:option>

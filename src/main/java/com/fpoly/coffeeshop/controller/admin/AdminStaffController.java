@@ -34,7 +34,7 @@ public class AdminStaffController {
 	
 	// edit
 	private void getUser(Model model) {
-		String url = getDomain() + "/user/list";
+		String url = getDomain() + "/user/list/flag_delete/false";
 		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
@@ -110,12 +110,12 @@ public class AdminStaffController {
 		model.addAttribute("check", true);
 		model.addAttribute("staff", staff.getBody());
 		
-		return "admin/user/edit";
+		return "admin/staff/edit";
 	}
 	
 	@RequestMapping(value = "/save")
 	public String save(Model model, @ModelAttribute Staff staff) {
-		String url = getDomain() + "/user";
+		String url = getDomain() + "/staff";
 		String message = "";
 		String alert = "danger";
 		

@@ -39,11 +39,11 @@
         						<div>
         							<div class="row">
         								<div class="col-sm-8">
-        									<a href="<c:url value='/admin/user/add' />" class="btn btn-success">Thêm</a>
+        									<a href="<c:url value='/admin/staff/add' />" class="btn btn-success">Thêm</a>
         								</div>
         								<div class="col-sm-4">
         									<div class="d-none d-sm-block">
-        										<form action="<c:url value='/admin/user/search' />" class="app-search" method="post">
+        										<form action="<c:url value='/admin/staff/search' />" class="app-search" method="post">
         											<div class="app-search-box">
         												<div class="input-group">
         													<input type="text" name="key" class="form-control" placeholder="Search...">
