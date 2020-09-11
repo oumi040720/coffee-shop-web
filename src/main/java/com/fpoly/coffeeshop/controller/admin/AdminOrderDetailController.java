@@ -1,15 +1,24 @@
 package com.fpoly.coffeeshop.controller.admin;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpoly.coffeeshop.model.Menu;
 import com.fpoly.coffeeshop.model.OrderDetail;
@@ -24,7 +33,8 @@ public class AdminOrderDetailController {
 	}
 	
 	public void getMenu(Model model) {
-		String url = getDomain()+"/menu/list";
+		String flagDelete = "false";
+		String url = getDomain()+"/menu/list/flag_delete/"+flagDelete;
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
@@ -39,19 +49,105 @@ public class AdminOrderDetailController {
 		}
 	}
 	
-	@RequestMapping(value = "/edit")
-	public String showUpdatePage(Model model, @RequestParam("orderCode") String orderCode) {
+	@RequestMapping(value = "/add")
+	public String showAddPage(Model model) {
 		getMenu(model);
 
-		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode;
+		model.addAttribute("check", false);
+		model.addAttribute("orderDetails", new OrderDetail());
+
+		return "admin/orderdeatil/edit";
+	}
+	
+	@RequestMapping(value = "/edit")
+	public String showUpdatePage(Model model, @RequestParam("orderCode") String orderCode) throws JsonParseException, JsonMappingException, IOException {
+		getMenu(model);
+
+		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode; 
 
 		RestTemplate restTemplate = new RestTemplate();
 
-		ResponseEntity<OrderDetail> orderdetails = restTemplate.getForEntity(url, OrderDetail.class);
-
-		model.addAttribute("check", true);
-		model.addAttribute("orderdetails", orderdetails.getBody());
-
-		return "admin/orderdetail/edit";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		
+		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+		ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		List<OrderDetail> orderDetails = mapper.readValue(result.getBody(), new TypeReference<List<OrderDetail>>(){}) ;
+		model.addAttribute("orderDetails", orderDetails);
+		
+		return "admin/orderdetail/list";
 	}
+	
+	@RequestMapping(value = "/save")
+	public String save(Model model, @ModelAttribute OrderDetail orderDetails) {
+		String url =  getDomain()+"/orderdetail";
+		String message = "";
+		String alert = "danger";
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		orderDetails.setFlagDelete(false);
+
+		if (orderDetails.getId() == null) {
+			url += "/insert";
+
+			Boolean result = restTemplate.postForObject(url, orderDetails, Boolean.class);
+
+			if (result) {
+				message = "insert success";
+				alert = "success";
+			} else {
+				message = "insert fail";
+			}
+		} else {
+			url += "/update?id=" + orderDetails.getId();
+
+			try {
+				restTemplate.put(url, orderDetails);
+
+				message = "update success";
+				alert = "success";
+			} catch (Exception e) {
+				message = "update fail";
+			}
+		}
+
+		model.addAttribute("message", message);
+		model.addAttribute("alert", alert);
+
+		return "redirect:/admin/orderdeatil/list?page=1";
+	}
+	
+	@RequestMapping(value = "/delete")
+	public String delete(Model model, @RequestParam("id") Long id) {
+		String url =  getDomain()+"/orderdetail/id/" + id;
+		String message = "";
+		String alert = "danger";
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<OrderDetail> reusult = restTemplate.getForEntity(url, OrderDetail.class);
+		OrderDetail orderDetails = reusult.getBody();
+
+		String deleteURL =  getDomain()+"/orderdetail/update?id=" + orderDetails.getId();
+
+		try {
+			orderDetails.setFlagDelete(true);
+			restTemplate.put(deleteURL, orderDetails);
+
+			message = "delete success";
+			alert = "success";
+		} catch (Exception e) {
+			message = "delete fail";
+		}
+
+		model.addAttribute("message", message);
+		model.addAttribute("alert", alert);
+
+		return "redirect:/admin/orderdetail/list?page=1";
+	}
+
+	
 }
+

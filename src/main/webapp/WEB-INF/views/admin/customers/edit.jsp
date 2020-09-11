@@ -114,7 +114,7 @@
         								<div class="form-group row">
         									<label class="col-lg-2 col-form-label"></label>
         									<div class="col-lg-10">
-        										<button id="submit" type="submit" class="btn btn-success">
+        										<button id="submit" type="submit" class="btn btn-outline-success btn-rounded waves-effect waves-light"><i class="ion ion-ios-save"></i>
         											<c:if test="${check}"> Cập nhật </c:if>
         											<c:if test="${!check}"> Thêm </c:if>
         										</button>
@@ -122,7 +122,7 @@
         											<form:hidden path="id"/>
         										</c:if>
         										<form:hidden path="flagDelete"/>
-        										<button type="reset" class="btn btn-outline-warning">
+        										<button type="reset" class="btn btn-outline-warning btn-rounded waves-effect waves-light"><i class="ion ion-md-refresh"></i>
         											Nhập lại
         										</button>
         									</div>
