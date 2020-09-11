@@ -1,6 +1,9 @@
 package com.fpoly.coffeeshop.controller.admin;
 
+<<<<<<< HEAD
 import java.io.IOException;
+=======
+>>>>>>> 4500a0465a40be7a5a10a1981371467e6afcd5f0
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,6 +52,7 @@ public class AdminOrderDetailController {
 		}
 	}
 	
+<<<<<<< HEAD
 	@RequestMapping(value = "/add")
 	public String showAddPage(Model model) {
 		getMenu(model);
@@ -58,11 +62,16 @@ public class AdminOrderDetailController {
 
 		return "admin/orderdeatil/edit";
 	}
+=======
+	// THIÊU QUY TRÌNH
+	// CLICK CHI TIẾT HÓA ĐƠN >> DANH SÁCH CHI TIẾT HÓA ĐƠN(THIẾU) >> CHỈNH SỬA CHI TIẾT HÓA ĐƠN
+>>>>>>> 4500a0465a40be7a5a10a1981371467e6afcd5f0
 	
 	@RequestMapping(value = "/edit")
 	public String showUpdatePage(Model model, @RequestParam("orderCode") String orderCode) throws JsonParseException, JsonMappingException, IOException {
 		getMenu(model);
 
+<<<<<<< HEAD
 		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode; 
 
 		RestTemplate restTemplate = new RestTemplate();
@@ -125,11 +134,16 @@ public class AdminOrderDetailController {
 		String url =  getDomain()+"/orderdetail/id/" + id;
 		String message = "";
 		String alert = "danger";
+=======
+		// cái này trả về list orderDetails, trong khi edit thì chỉ được 1 đối tượng chứ không phải là 1 list
+		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode; 
+>>>>>>> 4500a0465a40be7a5a10a1981371467e6afcd5f0
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<OrderDetail> reusult = restTemplate.getForEntity(url, OrderDetail.class);
 		OrderDetail orderDetails = reusult.getBody();
 
+<<<<<<< HEAD
 		String deleteURL =  getDomain()+"/orderdetail/update?id=" + orderDetails.getId();
 
 		try {
@@ -146,6 +160,18 @@ public class AdminOrderDetailController {
 		model.addAttribute("alert", alert);
 
 		return "redirect:/admin/orderdetail/list?page=1";
+=======
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		
+		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+		ResponseEntity<String> result = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		
+		model.addAttribute("check", true);
+//		model.addAttribute("orderdetails", null);
+		
+		return "admin/orderdetail/edit";
+>>>>>>> 4500a0465a40be7a5a10a1981371467e6afcd5f0
 	}
 
 	

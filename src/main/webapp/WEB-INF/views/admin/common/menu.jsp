@@ -16,7 +16,7 @@
 				</li>
 				<li class="menu-title mt-2">Tài khoản</li>
 				<li>
-					<a href="<c:url value='' />">
+					<a href="<c:url value='/admin/role/list' />">
 						<i class="mdi mdi-monitor-lock"></i>
 						<span>Vai trò</span>
 					</a>
@@ -28,13 +28,13 @@
 					</a>
 				</li>
 				<li>
-					<a href="<c:url value='/admin/customers/list?page=1' />">
+					<a href="<c:url value='/admin/staff/list?page=1' />">
 						<i class="mdi mdi-account-multiple"></i>
 						<span> Nhân viên </span>
 					</a>
 				</li>
 				<li>
-					<a href="">
+					<a href="<c:url value='/admin/customers/list?page=1' />">
 						<i class="mdi mdi-account-cash"></i>
 						<span> Khách hàng </span>
 					</a>
