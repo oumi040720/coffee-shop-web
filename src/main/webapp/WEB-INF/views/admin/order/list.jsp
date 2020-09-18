@@ -70,7 +70,7 @@
 							<c:if test="${not empty message}">
 								<div>
 									<div
-										class="alert alert-${alert} alert-dismissible fade show mb-0"
+										class="alert alert-${alexrt} alert-dismissible fade show mb-0"
 										role="alert">
 										<button type="button" class="close" data-dismiss="alert"
 											aria-label="Close">
@@ -96,9 +96,9 @@
 									<tbody>
 
 										<c:forEach var="order" items="${orders}">
-											<tr>
-												<td id="length" hidden>${length}</td>
-												<td id="orderID[]" hidden>${order.id}</td>
+											<tr id="table">
+												<td id="length" hidden >${length}</td>
+												<td id="orderID" hidden>${order.id}</td>
 												<td id="orderDate${order.id}">${order.orderDate}</td>
 												<td>${order.orderCode}</td>
 												<td><c:if test="${order.status == 1}">Đã Giao</c:if> <c:if
@@ -138,8 +138,8 @@
 		<%@ include file="/WEB-INF/views/admin/common/js.jsp"%>
 		<script
 			src='<c:url value="/template/paging/jquery.twbsPagination.js" />'></script>
-		<script type="text/javascript">
-			var totalPagesss = $
+	<!--	<script type="text/javascript">
+ 			var totalPagesss = $
 			{
 				totalPages
 			};
@@ -165,11 +165,12 @@
 					}
 				});
 			});
-		</script>
+		</script> -->
 		<script>
 			var a = document.getElementById("length").innerHTML
-			for (var i = 1; i <= a; i++) {
-
+			console.log(a)
+			for (var i = 1; i <= a.length; i++) {	
+				console.log(i);
 				var d = document.getElementById("orderDate" + i).innerHTML
 				console.log(d)
 				var today = new Date(d);
