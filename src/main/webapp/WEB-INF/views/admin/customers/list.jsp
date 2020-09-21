@@ -39,7 +39,8 @@
         						<div>
         							<div class="row">
         								<div class="col-sm-8">
-        									<a href="<c:url value='/admin/customers/add' />" class="btn btn-success">Thêm</a>
+        									<a href="<c:url value='/admin/customers/add' />"
+        									 class="btn btn-outline-success btn-rounded waves-effect waves-light"><i class="ion ion-md-add-circle"></i> Thêm</a>
         								</div>
         								<div class="col-sm-4">
         									<div class="d-none d-sm-block">

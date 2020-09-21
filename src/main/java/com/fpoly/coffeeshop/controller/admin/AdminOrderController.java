@@ -1,8 +1,5 @@
 package com.fpoly.coffeeshop.controller.admin;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,25 +9,19 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpoly.coffeeshop.model.Customers;
 import com.fpoly.coffeeshop.model.Order;
-import com.fpoly.coffeeshop.model.OrderDetail;
 import com.fpoly.coffeeshop.util.DomainUtil;
 
 @Controller
@@ -42,7 +33,8 @@ public class AdminOrderController {
 	}
 	
 	public void getCustomers(Model model) {
-		String url = getDomain()+"/customers/list";
+		String flagDelete = "false";
+		String url = getDomain()+"/customers/list/flag_delete/"+flagDelete;
 
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
@@ -51,7 +43,7 @@ public class AdminOrderController {
 		try {
 			List<Customers> customers = mapper.readValue(result.getBody(), new TypeReference<List<Customers>>() {
 			});
-
+			
 			model.addAttribute("customers", customers);
 		} catch (Exception e) {
 		}
@@ -125,17 +117,19 @@ public class AdminOrderController {
 		return "admin/order/edit";
 	}
 
-	@GetMapping(value = "/orderDetail")
-	@ResponseBody
-	public List<OrderDetail> fetcOrderDetail(@RequestParam("orderCode") String orderCode) throws URISyntaxException, JsonParseException, JsonMappingException, IOException {
-		String url =  getDomain()+"/orderdetail/list/search_or/" + orderCode;
-		RestTemplate restTemplate = new RestTemplate();
-		RequestEntity<String> req = new RequestEntity(HttpMethod.GET, new URI(url));
-		ResponseEntity<String> res = restTemplate.exchange(req, String.class);		
-		ObjectMapper obj = new ObjectMapper();		
-		return obj.readValue(res.getBody(), new TypeReference<List<OrderDetail>>() {
-		});
-	}
+	/*
+	 * @GetMapping(value = "/orderDetail")
+	 * 
+	 * @ResponseBody public List<OrderDetail>
+	 * fetcOrderDetail(@RequestParam("orderCode") String orderCode) throws
+	 * URISyntaxException, JsonParseException, JsonMappingException, IOException {
+	 * String url = getDomain()+"/orderdetail/list/search_or/" + orderCode;
+	 * RestTemplate restTemplate = new RestTemplate(); RequestEntity<String> req =
+	 * new RequestEntity(HttpMethod.GET, new URI(url)); ResponseEntity<String> res =
+	 * restTemplate.exchange(req, String.class); ObjectMapper obj = new
+	 * ObjectMapper(); return obj.readValue(res.getBody(), new
+	 * TypeReference<List<OrderDetail>>() { }); }
+	 */
 
 	@RequestMapping(value = "/save")
 	public String save(Model model, @ModelAttribute Order orders) {

@@ -10,7 +10,7 @@ public class OrderDetail {
 	
 	private String product;
 
-	private Boolean flagDelete;
+	private Boolean flagDelete = false;
 
 	public Long getId() {
 		return id;
