@@ -10,5 +10,5 @@ public class AdminDashBoardController {
 	public String showPage() {
 		return "admin/dashboard";
 	}
-	
+
 }

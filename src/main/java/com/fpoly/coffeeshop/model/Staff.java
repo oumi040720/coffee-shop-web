@@ -2,12 +2,15 @@ package com.fpoly.coffeeshop.model;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Staff {
 
 	private Long id;
 
 	private String fullname;
 
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date birthday;
 
 	private String email;

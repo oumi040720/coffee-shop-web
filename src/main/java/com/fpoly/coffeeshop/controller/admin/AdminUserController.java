@@ -91,6 +91,7 @@ public class AdminUserController {
 		getRole(model);
 		
 		model.addAttribute("check", false);
+		model.addAttribute("domain", getDomain());
 		model.addAttribute("user", new User());
 		
 		return "admin/user/edit";
@@ -107,6 +108,7 @@ public class AdminUserController {
 		ResponseEntity<User> user = restTemplate.getForEntity(url, User.class);
 		
 		model.addAttribute("check", true);
+		model.addAttribute("domain", getDomain());
 		model.addAttribute("user", user.getBody());
 		
 		return "admin/user/edit";

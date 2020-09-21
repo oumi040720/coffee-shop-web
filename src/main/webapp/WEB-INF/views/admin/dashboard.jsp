@@ -37,6 +37,7 @@
         	</div>
         
         	<%@ include file="/WEB-INF/views/admin/common/js.jsp" %>
+        	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         </div>
 	</body>
 </html>
