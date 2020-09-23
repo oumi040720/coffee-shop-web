@@ -129,10 +129,10 @@ public class AdminStaffController {
 			Boolean result = restTemplate.postForObject(url, staff, Boolean.class);
 			
 			if (result) {
-				message = "insert success";
+				message = "message_staff_insert_success";
 				alert = "success";
 			} else {
-				message = "insert fail";
+				message = "message_staff_insert_fail";
 			}
 		} else {
 			url += "/update?id=" + staff.getId();
@@ -140,10 +140,10 @@ public class AdminStaffController {
 			try {
 				restTemplate.put(url, staff);
 				
-				message = "update success";
+				message = "message_staff_update_success";
 				alert = "success";
 			} catch (Exception e) {
-				message = "update fail";
+				message = "message_staff_update_fail";
 			}
 		}
 		
@@ -169,10 +169,10 @@ public class AdminStaffController {
 			staff.setFlagDelete(true);
 			restTemplate.put(deleteURL, staff);
 			
-			message = "delete success";
+			message = "message_staff_delete_success";
 			alert = "success";
 		} catch (Exception e) {
-			message = "delete fail";
+			message = "message_staff_delete_fail";
 		}
 		
 		model.addAttribute("message", message);

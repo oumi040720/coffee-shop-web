@@ -127,28 +127,31 @@
         	<input id='flag' type="hidden" value='' >
         
         	<%@ include file="/WEB-INF/views/admin/common/js.jsp" %>
+        	<c:if test="${!check}">
+        		<script type="text/javascript">
+	        		var getUser =  function() {
+	            		var url = '${domain}' + '/user/username/' + $('#username').val();
+	
+	            		$.ajax({
+	    					 url: url,
+	    					 type : "get",
+	    					 success: function(result) {
+	    						 console.log(result);
+	    						 if (!result) {
+	    							 $('#flag').val('true');
+	    							 $('#warningUsername').text('');
+	    							 $('#username').removeClass('parsley-error');
+	    						 } else {
+	    							 $('#flag').val('false');
+	    							 $('#username').addClass('parsley-error');
+	    							 $('#warningUsername').text('TÊN TÀI KHOẢN đã tồn tại!');
+	    						 }
+	    					 }
+	    				});
+	            	}
+        		</script>
+        	</c:if>
         	<script type="text/javascript">
-	        	var getUser =  function() {
-	        		var url = '${domain}' + '/user/username/' + $('#username').val();
-
-	        		$.ajax({
-						 url: url,
-						 type : "get",
-						 success: function(result) {
-							 console.log(result);
-							 if (!result) {
-								 $('#flag').val('true');
-								 $('#warningUsername').text('');
-								 $('#username').removeClass('parsley-error');
-							 } else {
-								 $('#flag').val('false');
-								 $('#username').addClass('parsley-error');
-								 $('#warningUsername').text('TÊN TÀI KHOẢN đã tồn tại!');
-							 }
-						 }
-					});
-	        	}
-        	
         		var checkValidated =  function() {
         			try {
         				var username = $('#username').val();
@@ -209,7 +212,7 @@
     							$('#warningUsername').text('');
 							 	$('#username').removeClass('parsley-error');
     							checkUsername = true;
-    						} else {
+    						} else if (flag === 'false') {
     							$('#username').addClass('parsley-error');
 								$('#warningUsername').text('TÊN TÀI KHOẢN đã tồn tại!');
     							checkUsername = false;
