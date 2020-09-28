@@ -67,7 +67,7 @@
         										Mã vai trò <span class="text-danger"> (*) </span>
         									</label>
         									<div class="col-lg-10">
-        										<form:input path="roleCode" cssClass="form-control"/>
+        										<form:input path="roleCode" cssClass="form-control" onfocusout="getRole()"/>
         										<ul class="parsley-errors-list filled">
         											<li id="warningRoleCode" class="parsley-required"></li>
         										</ul>
@@ -97,8 +97,32 @@
         		</div>
         	</div>
         
+        	<input id='flag' type="hidden" value='' >
+        
         	<%@ include file="/WEB-INF/views/admin/common/js.jsp" %>
         	<script type="text/javascript">
+	        	/*
+        		var getRole =  function() {
+	        		var url = '${domain}' + '/role/role_code/' + $('#roleCode').val();
+	
+	        		$.ajax({
+						 url: url,
+						 type : "get",
+						 success: function(result) {
+							 console.log(result);
+							 if (!result) {
+								 $('#flag').val('true');
+								 $('#warningRoleCode').text('');
+								 $('#roleCode').removeClass('parsley-error');
+							 } else {
+								 $('#flag').val('false');
+								 $('#roleCode').addClass('parsley-error');
+								 $('#warningRoleCode').text('MÃ VAI TRÒ đã tồn tại!');
+							 }
+						 }
+					});
+	        	}
+        		*/
         		var checkValidated = function() {
         			var roleName = $('#roleName').val();
         			var roleCode = $('#roleCode').val();
@@ -124,6 +148,18 @@
 						$('#warningRoleCode').text('Không được bỏ trống MÃ VAI TRÒ!');
 					}
 
+					/*
+					if (flag === 'true') {
+						$('#warningRoleCode').text('');
+						$('#roleCode').removeClass('parsley-error');
+						checkRoleCode = true;
+					} else {
+						$('#roleCode').addClass('parsley-error');
+						$('#warningRoleCode').text('MÃ VAI TRÒ đã tồn tại!');
+						checkRoleCode = false;
+					} 
+					*/
+					
 					if (checkRoleName && checkRoleCode) {
 						return true;
 					} else {

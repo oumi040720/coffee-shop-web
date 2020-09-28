@@ -64,6 +64,7 @@ public class AdminRoleController {
 	public String showAddPage(Model model) {
 		model.addAttribute("check", false);
 		model.addAttribute("role", new Role());
+		model.addAttribute("domain", getDomain());
 		
 		return "admin/role/edit";
 	}
@@ -78,6 +79,7 @@ public class AdminRoleController {
 		
 		model.addAttribute("check", true);
 		model.addAttribute("role", user.getBody());
+		model.addAttribute("domain", getDomain());
 		
 		return "admin/role/edit";
 	}
@@ -98,10 +100,10 @@ public class AdminRoleController {
 			Boolean result = restTemplate.postForObject(url, role, Boolean.class);
 			
 			if (result) {
-				message = "insert success";
+				message = "message_role_insert_success";
 				alert = "success";
 			} else {
-				message = "insert fail";
+				message = "message_role_insert_fail";
 			}
 		} else {
 			url += "/update?id=" + role.getId();
@@ -109,10 +111,10 @@ public class AdminRoleController {
 			try {
 				restTemplate.put(url, role);
 				
-				message = "update success";
+				message = "message_role_update_success";
 				alert = "success";
 			} catch (Exception e) {
-				message = "update fail";
+				message = "message_role_update_fail";
 			}
 		}
 		
@@ -138,10 +140,10 @@ public class AdminRoleController {
 			role.setFlagDelete(true);
 			restTemplate.put(deleteURL, role);
 			
-			message = "delete success";
+			message = "message_role_delete_success";
 			alert = "success";
 		} catch (Exception e) {
-			message = "delete fail";
+			message = "message_role_update_fail";
 		}
 		
 		model.addAttribute("message", message);

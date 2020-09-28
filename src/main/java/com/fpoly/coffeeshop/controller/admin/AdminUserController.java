@@ -91,6 +91,7 @@ public class AdminUserController {
 		getRole(model);
 		
 		model.addAttribute("check", false);
+		model.addAttribute("domain", getDomain());
 		model.addAttribute("user", new User());
 		
 		return "admin/user/edit";
@@ -107,6 +108,7 @@ public class AdminUserController {
 		ResponseEntity<User> user = restTemplate.getForEntity(url, User.class);
 		
 		model.addAttribute("check", true);
+		model.addAttribute("domain", getDomain());
 		model.addAttribute("user", user.getBody());
 		
 		return "admin/user/edit";
@@ -128,10 +130,10 @@ public class AdminUserController {
 			Boolean result = restTemplate.postForObject(url, user, Boolean.class);
 			
 			if (result) {
-				message = "insert success";
+				message = "message_user_insert_success";
 				alert = "success";
 			} else {
-				message = "insert fail";
+				message = "message_user_insert_fail";
 			}
 		} else {
 			url += "/update?id=" + user.getId();
@@ -139,10 +141,10 @@ public class AdminUserController {
 			try {
 				restTemplate.put(url, user);
 				
-				message = "update success";
+				message = "message_user_update_success";
 				alert = "success";
 			} catch (Exception e) {
-				message = "update fail";
+				message = "message_user_update_fail";
 			}
 		}
 		
@@ -169,10 +171,10 @@ public class AdminUserController {
 			user.setPassword("123@123zxCV@");
 			restTemplate.put(deleteURL, user);
 			
-			message = "delete success";
+			message = "message_user_delete_success";
 			alert = "success";
 		} catch (Exception e) {
-			message = "delete fail";
+			message = "message_user_delete_fail";
 		}
 		
 		model.addAttribute("message", message);

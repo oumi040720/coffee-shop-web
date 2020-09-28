@@ -50,7 +50,7 @@
         						<div class="row">
         							<c:url var="action" value="/admin/staff/save" />
         							<form:form action="${action}" modelAttribute="staff" cssClass="col-lg-12" 
-        									data-parsley-validate="" novalidate="">
+        									onsubmit="return checkValidated()" data-parsley-validate="" novalidate="">
         								<div class="form-group row">
         									<label class="col-lg-2 col-form-label">
         										Tên nhân viên <span class="text-danger"> (*) </span>
@@ -129,7 +129,7 @@
         											</c:forEach>
         										</form:select>
         										<ul class="parsley-errors-list filled">
-        											<li id="warningUser" class="parsley-required"></li>
+        											<li id="warningUsername" class="parsley-required"></li>
         										</ul>
         									</div>
         								</div>
@@ -158,19 +158,84 @@
         	</div>
         
         	<%@ include file="/WEB-INF/views/admin/common/js.jsp" %>
-        	<!-- 
         	<script type="text/javascript">
         		var checkValidated = function() {
+        			var fullname = $('#fullname').val();
+        			var birthday = $('#birthday').val();
+        			var email = $('#email').val();
+        			var phone = $('#phone').val();
+        			var address = $('#address').val();
+        			var photo = $('#photo').val();
         			var username = $('#username').val();
-        			var password = $('#password').val();
-        			var confirm = $('#confirm').val();
-        			var role = $('#roleCode').val();
         			
+        			var checkFullname = false;
+        			var checkBirthday = false;
+        			var checkEmail = false;
+        			var checkPhone = false;
+        			var checkAddress = false;
+        			var checkPhoto = false;
         			var checkUsername = false;
-        			var checkPassword = false;
-        			var checkConfirm = false;
-        			var checkRole = false;
         			
+					if (fullname.trim().length > 0) {
+						$('#warningFullname').text('');
+						$('#fullname').removeClass('parsley-error');
+						checkFullname = true;
+					} else {
+						$('#fullname').addClass('parsley-error');
+						$('#warningFullname').text('Không được bỏ trống HỌ VÀ TÊN!');
+						checkFullname = false;
+					}
+					
+					if (birthday.trim().length > 0) {
+						$('#warningBirthday').text('');
+						$('#birthday').removeClass('parsley-error');
+						checkBirthday = true;
+					} else {
+						$('#birthday').addClass('parsley-error');
+						$('#warningBirthday').text('Không được bỏ trống NGÀY SINH!');
+						checkBirthday = false;
+					}
+					
+					if (email.trim().length > 0) {
+						$('#warningEmail').text('');
+						$('#email').removeClass('parsley-error');
+						checkEmail = true;
+					} else {
+						$('#email').addClass('parsley-error');
+						$('#warningEmail').text('Không được bỏ trống E-MAIL!');
+						checkEmail = false;
+					}
+					
+					if (phone.trim().length > 0) {
+						$('#warningPhone').text('');
+						$('#phone').removeClass('parsley-error');
+						checkPhone = true;
+					} else {
+						$('#phone').addClass('parsley-error');
+						$('#warningPhone').text('Không được bỏ trống SỐ ĐIỆN THOẠI!');
+						checkPhone = false;
+					}
+					
+					if (address.trim().length > 0) {
+						$('#warningAddress').text('');
+						$('#address').removeClass('parsley-error');
+						checkAddress = true;
+					} else {
+						$('#address').addClass('parsley-error');
+						$('#warningAddress').text('Không được bỏ trống ĐỊA CHỈ!');
+						checkAddress = false;
+					}
+					
+					if (photo.trim().length > 0) {
+						$('#warningPhoto').text('');
+						$('#photo').removeClass('parsley-error');
+						checkPhoto = true;
+					} else {
+						$('#photo').addClass('parsley-error');
+						$('#warningPhoto').text('Không được bỏ trống HÌNH ẢNH!');
+						checkPhoto = false;
+					}
+					
 					if (username.trim().length > 0) {
 						$('#warningUsername').text('');
 						$('#username').removeClass('parsley-error');
@@ -178,55 +243,76 @@
 					} else {
 						$('#username').addClass('parsley-error');
 						$('#warningUsername').text('Không được bỏ trống TÊN TÀI KHOẢN!');
+						checkUsername = false;
 					}
 					
-					if (password.trim().length > 0) {
-						$('#warningPassword').text('');
-						$('#password').removeClass('parsley-error');
-						checkPassword = true;
-					} else {
-						$('#password').addClass('parsley-error');
-						$('#warningPassword').text('Không được bỏ trống MẬT KHẨU!');
-					}
-					
-					if (confirm.trim().length > 0) {
-						$('#warningConfirm').text('');
-						$('#confirm').removeClass('parsley-error');
-						checkConfirm = true;
-					} else {
-						$('#confirm').addClass('parsley-error');
-						$('#warningConfirm').text('Không được bỏ trống XÁC NHẬN MẬT KHẨU!');
-					}
-					
-					if (role.trim().length > 0) {
-						$('#warningRole').text('');
-						$('#roleCode').removeClass('parsley-error');
-						checkRole = true;
-					} else {
-						$('#roleCode').addClass('parsley-error');
-						$('#warningRole').text('Không được bỏ trống VAI TRÒ!');
-					}
-					
-					if (checkPassword && checkConfirm) {
-						if (password === confirm) {
-							$('#warningConfirm').text('');
-							$('#confirm').removeClass('parsley-error');
-							checkRole = true;
+					if (checkBirthday) {
+						var pattern = new RegExp('[0-3][0-9]/(0|1)[0-9]/(19|20)[0-9]{2}'); 
+						if(birthday.match(pattern)) {
+							var array = birthday.split('//'); 
+							
+							var day = array[0]; 
+							var month = array[1] - 1;
+							var year = date_array[2]; 
+							
+							sourceDate = new Date(year,month,day); 
+							
+							if(year != sourceDate.getFullYear()) {
+								$('#birthday').addClass('parsley-error');
+								$('#warningBirthday').text('Năm của NGÀY SINH không hợp lệ!');
+								checkBirthday = false;
+							} else {
+								$('#warningBirthday').text('');
+								$('#birthday').removeClass('parsley-error');
+								checkBirthday = true;
+							}
+							
+							if(month != sourceDate.getMonth()) {
+								$('#birthday').addClass('parsley-error');
+								$('#warningBirthday').text('Tháng của NGÀY SINH không hợp lệ!');
+								checkBirthday = false;
+							} else {
+								$('#warningBirthday').text('');
+								$('#birthday').removeClass('parsley-error');
+								checkBirthday = true;
+							}
+							
+							if(day != sourceDate.getDate()) {
+								$('#birthday').addClass('parsley-error');
+								$('#warningBirthday').text('Ngày của NGÀY SINH không hợp lệ!');
+								checkBirthday = false;
+							} else {
+								$('#warningBirthday').text('');
+								$('#birthday').removeClass('parsley-error');
+								checkBirthday = true;
+							}
 						} else {
-							var checkConfirm = false;
-		        			$('#confirm').addClass('parsley-error');
-							$('#warningConfirm').text('XÁC NHẬN MẬT KHẨU không chính xác!');
+							$('#birthday').addClass('parsley-error');
+							$('#warningBirthday').text('Định dạng NGÀY SINH không hợp lệ!');
+							checkBirthday = false;
 						}
-					} 
+					}
 					
-					if (checkUsername && checkPassword && checkConfirm && checkRole) {
+					if (checkEmail) {
+						var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+						if (filter.test(email)) {
+							$('#warningEmail').text('');
+							$('#email').removeClass('parsley-error');
+							checkEmail = true;
+						} else {
+							$('#email').addClass('parsley-error');
+							$('#warningEmail').text('E-MAIL không hợp lệ!');
+							checkEmail = false;
+						}
+					}
+					
+					if (checkFullname && checkBirthday && checkEmail && checkPhone && checkAddress && checkPhoto && checkUsername) {
 						return true;
 					} else {
 						return false;
 					}
         		}
         	</script>
-        	-->
         </div>
 	</body>
 </html>

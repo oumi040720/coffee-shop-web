@@ -56,7 +56,7 @@
         										Tên tài khoản <span class="text-danger"> (*) </span>
         									</label>
         									<div class="col-lg-10">
-        										<form:input path="username" cssClass="form-control"/>
+        										<form:input path="username" cssClass="form-control" onfocusout="getUser()"/>
         										<ul class="parsley-errors-list filled">
         											<li id="warningUsername" class="parsley-required"></li>
         										</ul>
@@ -124,75 +124,125 @@
         		</div>
         	</div>
         
+        	<input id='flag' type="hidden" value='' >
+        
         	<%@ include file="/WEB-INF/views/admin/common/js.jsp" %>
+        	<c:if test="${!check}">
+        		<script type="text/javascript">
+	        		var getUser =  function() {
+	            		var url = '${domain}' + '/user/username/' + $('#username').val();
+	
+	            		$.ajax({
+	    					 url: url,
+	    					 type : "get",
+	    					 success: function(result) {
+	    						 console.log(result);
+	    						 if (!result) {
+	    							 $('#flag').val('true');
+	    							 $('#warningUsername').text('');
+	    							 $('#username').removeClass('parsley-error');
+	    						 } else {
+	    							 $('#flag').val('false');
+	    							 $('#username').addClass('parsley-error');
+	    							 $('#warningUsername').text('TÊN TÀI KHOẢN đã tồn tại!');
+	    						 }
+	    					 }
+	    				});
+	            	}
+        		</script>
+        	</c:if>
         	<script type="text/javascript">
-        		var checkValidated = function() {
-        			var username = $('#username').val();
-        			var password = $('#password').val();
-        			var confirm = $('#confirm').val();
-        			var role = $('#roleCode').val();
-        			
-        			var checkUsername = false;
-        			var checkPassword = false;
-        			var checkConfirm = false;
-        			var checkRole = false;
-        			
-					if (username.trim().length > 0) {
-						$('#warningUsername').text('');
-						$('#username').removeClass('parsley-error');
-						checkUsername = true;
-					} else {
-						$('#username').addClass('parsley-error');
-						$('#warningUsername').text('Không được bỏ trống TÊN TÀI KHOẢN!');
-					}
-					
-					if (password.trim().length > 0) {
-						$('#warningPassword').text('');
-						$('#password').removeClass('parsley-error');
-						checkPassword = true;
-					} else {
-						$('#password').addClass('parsley-error');
-						$('#warningPassword').text('Không được bỏ trống MẬT KHẨU!');
-					}
-					
-					if (confirm.trim().length > 0) {
-						$('#warningConfirm').text('');
-						$('#confirm').removeClass('parsley-error');
-						checkConfirm = true;
-					} else {
-						$('#confirm').addClass('parsley-error');
-						$('#warningConfirm').text('Không được bỏ trống XÁC NHẬN MẬT KHẨU!');
-					}
-					
-					if (role.trim().length > 0) {
-						$('#warningRole').text('');
-						$('#roleCode').removeClass('parsley-error');
-						checkRole = true;
-					} else {
-						$('#roleCode').addClass('parsley-error');
-						$('#warningRole').text('Không được bỏ trống VAI TRÒ!');
-					}
-					
-					if (checkPassword && checkConfirm) {
-						if (password === confirm) {
-							$('#warningConfirm').text('');
-							$('#confirm').removeClass('parsley-error');
-							checkRole = true;
-						} else {
-							var checkConfirm = false;
-		        			$('#confirm').addClass('parsley-error');
-							$('#warningConfirm').text('XÁC NHẬN MẬT KHẨU không chính xác!');
-						}
-					} 
-					
-					if (checkUsername && checkPassword && checkConfirm && checkRole) {
-						return true;
-					} else {
-						return false;
-					}
+        		var checkValidated =  function() {
+        			try {
+        				var username = $('#username').val();
+            			var password = $('#password').val();
+            			var confirm = $('#confirm').val();
+            			var role = $('#roleCode').val();
+            			
+            			var checkUsername = false;
+            			var checkPassword = false;
+            			var checkConfirm = false;
+            			var checkRole = false;
+            			
+            			var flag = $('#flag').val();
+            			
+            			if (username.trim().length > 0) {
+    						$('#warningUsername').text('');
+    						$('#username').removeClass('parsley-error');
+    						checkUsername = true;
+    						
+    					} else {
+    						$('#username').addClass('parsley-error');
+    						$('#warningUsername').text('Không được bỏ trống TÊN TÀI KHOẢN!');
+    						checkUsername = false;
+    					}
+            			
+    					if (password.trim().length > 0) {
+    						$('#warningPassword').text('');
+    						$('#password').removeClass('parsley-error');
+    						checkPassword = true;
+    					} else {
+    						$('#password').addClass('parsley-error');
+    						$('#warningPassword').text('Không được bỏ trống MẬT KHẨU!');
+    						checkPassword = false;
+    					}
+    					
+    					if (confirm.trim().length > 0) {
+    						$('#warningConfirm').text('');
+    						$('#confirm').removeClass('parsley-error');
+    						checkConfirm = true;
+    					} else {
+    						$('#confirm').addClass('parsley-error');
+    						$('#warningConfirm').text('Không được bỏ trống XÁC NHẬN MẬT KHẨU!');
+    						checkConfirm = false;
+    					}
+    					
+    					if (role.trim().length > 0) {
+    						$('#warningRole').text('');
+    						$('#roleCode').removeClass('parsley-error');
+    						checkRole = true;
+    					} else {
+    						$('#roleCode').addClass('parsley-error');
+    						$('#warningRole').text('Không được bỏ trống VAI TRÒ!');
+    						checkRole = false;
+    					}
+    					
+    					if (checkUsername) {
+    						if (flag === 'true') {
+    							$('#warningUsername').text('');
+							 	$('#username').removeClass('parsley-error');
+    							checkUsername = true;
+    						} else if (flag === 'false') {
+    							$('#username').addClass('parsley-error');
+								$('#warningUsername').text('TÊN TÀI KHOẢN đã tồn tại!');
+    							checkUsername = false;
+    						}
+    					} 
+    					
+    					if (checkPassword && checkConfirm) {
+    						if (password === confirm) {
+    							$('#warningConfirm').text('');
+    							$('#confirm').removeClass('parsley-error');
+    							checkPassword = true;
+    							checkConfirm = true;
+    						} else {
+    							checkPassword = false;
+    							checkConfirm = false;
+    		        			$('#confirm').addClass('parsley-error');
+    							$('#warningConfirm').text('XÁC NHẬN MẬT KHẨU không chính xác!');
+    						}
+    					} 
+    					
+    					if (checkUsername && checkPassword && checkConfirm && checkRole) {
+    						return true;
+    					} else {
+    						return false;
+    					}
+        			} catch(err) {
+        				return false;
+        			}
         		}
         	</script>
-        		
         </div>
 	</body>
 </html>
