@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <!DOCTYPE html>
 <html>
@@ -41,17 +43,17 @@
 							<div>
 								<div class="row">
 									<div class="col-sm-8">
-										<a href="<c:url value='/admin/order/add' />"
+										<a href="<c:url value='/admin/order/save' />"
 											class="btn btn-outline-success btn-rounded waves-effect waves-light"><i
 											class="ion ion-md-add-circle"></i> Thêm</a>
 									</div>
 									<div class="col-sm-4">
 										<div class="d-none d-sm-block">
-											<form action="<c:url value='' />" class="app-search"
-												method="post">
+											<form action="<c:url value='/admin/order/search' />"
+												class="app-search" method="post">
 												<div class="app-search-box">
 													<div class="input-group">
-														<input type="text" name="" class="form-control"
+														<input type="text" name="key" class="form-control"
 															placeholder="Search..."> <input type="hidden"
 															name="page" value="1">
 														<div class="input-group-append">
@@ -69,8 +71,8 @@
 							<br>
 							<c:if test="${not empty message}">
 								<div>
-									<div
-										class="alert alert-${alexrt} alert-dismissible fade show mb-0"
+									<div id="elertsuccess"
+										class="alert alert-${alert} alert-dismissible fade show mb-0"
 										role="alert">
 										<button type="button" class="close" data-dismiss="alert"
 											aria-label="Close">
@@ -89,30 +91,21 @@
 											<th>Ngày Đặt</th>
 											<th>Mã Hóa Đơn</th>
 											<th>Trạng Thái</th>
-											<th>Họ Và Tên</th>
 											<th>#</th>
 										</tr>
 									</thead>
 									<tbody>
 
 										<c:forEach var="order" items="${orders}">
-											<tr id="table">
-												<td id="length" hidden >${length}</td>
-												<td id="orderID" hidden>${order.id}</td>
-												<td id="orderDate${order.id}">${order.orderDate}</td>
+											<tr>
+												<td id="orderDate${order.id}"><fmt:formatDate type = "both" value="${order.orderDate}"/></td>
 												<td>${order.orderCode}</td>
-												<td><c:if test="${order.status == 1}">Đã Giao</c:if> <c:if
-														test="${order.status == 0}">Chưa Giao</c:if></td>
-												<td>${order.fullname}</td>
+												<td><c:if test="${order.status == 0}">Chưa Giao</c:if></td>
 												<td><c:url var="editdetailURL"
 														value="/admin/orderdetail/edit">
 														<c:param name="orderCode" value="${order.orderCode}" />
 													</c:url> <a href="${editdetailURL}" class="btn btn-outline-info">
 														<i class="mdi mdi-pencil-box-multiple-outline"></i>
-												</a> <c:url var="editURL" value="/admin/order/edit">
-														<c:param name="id" value="${order.id}" />
-													</c:url> <a href="${editURL}" class="btn btn-outline-info"> <i
-														class="mdi mdi-pencil-outline"></i>
 												</a> <c:url var="deleteURL" value="/admin/order/delete">
 														<c:param name="id" value="${order.id}" />
 													</c:url> <a href="${deleteURL}" class="btn btn-outline-danger">
@@ -134,53 +127,27 @@
 				</div>
 			</div>
 		</div>
-
 		<%@ include file="/WEB-INF/views/admin/common/js.jsp"%>
 		<script
 			src='<c:url value="/template/paging/jquery.twbsPagination.js" />'></script>
-	<!--	<script type="text/javascript">
- 			var totalPagesss = $
-			{
-				totalPages
-			};
-			var currentPagess = $
-			{
-				page
-			};
-			var limit = $
-			{
-				limit
-			};
-
+		<script type="text/javascript">
+			var totalPages = ${totalPages};
+			var currentPage = ${page};
+			var limit = ${limit};
+		
 			$(function() {
 				window.pagObj = $('#pagination').twbsPagination({
-					totalPagess : totalPagesss,
+					totalPages : totalPages,
 					visiblePages : 5,
-					startPage : currentPagess,
+					startPage : currentPage,
 					onPageClick : function(event, page) {
-						if (currentPagess != page) {
+						if (currentPage != page) {
 							$('#page').val(page);
 							$('#form-submit').submit();
 						}
 					}
 				});
 			});
-		</script> -->
-		<script>
-			var a = document.getElementById("length").innerHTML
-			console.log(a)
-			for (var i = 1; i <= a.length; i++) {	
-				console.log(i);
-				var d = document.getElementById("orderDate" + i).innerHTML
-				console.log(d)
-				var today = new Date(d);
-				var dd = String(today.getDate()).padStart(2, '0');
-				var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-				var yyyy = today.getFullYear();
-
-				today = dd + '-' + mm + '-' + yyyy;
-				document.getElementById("orderDate" + i).innerHTML = today;
-			}
 		</script>
 	</div>
 </body>

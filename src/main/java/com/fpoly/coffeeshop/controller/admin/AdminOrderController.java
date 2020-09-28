@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpoly.coffeeshop.model.Customers;
+import com.fpoly.coffeeshop.model.Menu;
 import com.fpoly.coffeeshop.model.Order;
 import com.fpoly.coffeeshop.util.DomainUtil;
 
@@ -48,9 +50,27 @@ public class AdminOrderController {
 		} catch (Exception e) {
 		}
 	}
+	
+	public void getMenu(Model model) {
+		String flagDelete = "false";
+		String url = getDomain() + "/menu/list/flag_delete/" + flagDelete;
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			List<Menu> menus = mapper.readValue(result.getBody(), new TypeReference<List<Menu>>() {
+			});
+
+			model.addAttribute("menus", menus);
+		} catch (Exception e) {
+		}
+	}
 
 	@RequestMapping(value = "/list")
-	public String showListPage(HttpServletRequest request) {
+	public String showListPage( Model model, HttpServletRequest request) {
+		getMenu(model);
 		String message = request.getParameter("message");
 		String alert = request.getParameter("alert");
 
@@ -137,10 +157,12 @@ public class AdminOrderController {
 		String message = "";
 		String alert = "danger";
 
+		String code = RandomStringUtils.randomAlphanumeric(6);
+		
 		RestTemplate restTemplate = new RestTemplate();
-
+		orders.setOrderCode(code);
 		orders.setFlagDelete(false);
-
+		orders.setStatus(0);
 		if (orders.getId() == null) {
 			url += "/insert";
 
@@ -164,11 +186,9 @@ public class AdminOrderController {
 				message = "update fail";
 			}
 		}
+		model.addAttribute("orderCode", code);
 
-		model.addAttribute("message", message);
-		model.addAttribute("alert", alert);
-
-		return "redirect:/admin/order/list?page=1";
+		return "redirect:/admin/orderdetail/editDetail";
 	}
 
 	@RequestMapping(value = "/delete")

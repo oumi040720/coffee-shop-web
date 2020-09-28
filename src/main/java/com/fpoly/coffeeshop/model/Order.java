@@ -1,17 +1,19 @@
 package com.fpoly.coffeeshop.model;
 
-public class Order {
-	
-	private Long id;	
+import java.util.Date;
 
-	private String orderDate;
-	
+public class Order {
+
+	private Long id;
+
+	private Date orderDate;
+
 	private String orderCode;
-	
+
 	private Integer status;
-	
+
 	private String fullname;
-	
+
 	private Boolean flagDelete;
 
 	public Long getId() {
@@ -22,11 +24,11 @@ public class Order {
 		this.id = id;
 	}
 
-	public String getOrderDate() {
+	public Date getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(String orderDate) {
+	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
 

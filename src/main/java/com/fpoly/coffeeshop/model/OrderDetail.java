@@ -9,6 +9,8 @@ public class OrderDetail {
 	private String order;
 	
 	private String product;
+	
+	private Long totalMoney;
 
 	private Boolean flagDelete = false;
 
@@ -44,6 +46,14 @@ public class OrderDetail {
 		this.product = product;
 	}
 
+	public Long getTotalMoney() {
+		return totalMoney;
+	}
+
+	public void setTotalMoney(Long totalMoney) {
+		this.totalMoney = totalMoney;
+	}
+
 	public Boolean getFlagDelete() {
 		return flagDelete;
 	}
@@ -51,5 +61,5 @@ public class OrderDetail {
 	public void setFlagDelete(Boolean flagDelete) {
 		this.flagDelete = flagDelete;
 	}
-	
+
 }

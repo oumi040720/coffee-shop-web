@@ -86,35 +86,22 @@
         								<tbody>
         									<c:forEach var="order" items="${orders}">
         										<tr>
-        											<td>${order.orderDate}</td>
-        											<td>${order.orderCode}</td>
-        											<td>
-        											<c:if test="${order.status == 1}">Đã Giao</c:if>
-        											<c:if test="${order.status == 0}">Chưa Giao</c:if>
-        											</td>
-        											<td>${order.fullname}</td>
-        											<td>
-        												<c:url var="editURL" value="/admin/order/edit">
-        													<c:param name="id" value="${order.id}" />
-        												</c:url>
-        												<a href="${editURL}" class="btn btn-outline-info">
-        													<i class=" typcn typcn-edit"></i>
-        												</a>
-        												<c:url var="editURL" value="/admin/order/edit">
-        													<c:param name="id" value="${order.id}" />
-        												</c:url>
-        												<a href="${editURL}" class="btn btn-outline-info">
-        													<i class="mdi mdi-pencil-outline"></i>
-        												</a>
-        												
-        												<c:url var="deleteURL" value="/admin/order/delete">
-        													<c:param name="id" value="${order.id}" />
-        												</c:url>
-        												<a href="${deleteURL}" class="btn btn-outline-danger">
-        													<i class=" mdi mdi-window-close"></i>
-        												</a>
-        											</td>
-        										</tr>
+												<td id="length" hidden>${length}</td>
+												<td id="orderID" hidden>${order.id}</td>
+												<td id="orderDate${order.id}">${order.orderDate}</td>
+												<td>${order.orderCode}</td>
+												<td><c:if test="${order.status == 0}">Chưa Giao</c:if></td>
+												<td><c:url var="editdetailURL"
+														value="/admin/orderdetail/edit">
+														<c:param name="orderCode" value="${order.orderCode}" />
+													</c:url> <a href="${editdetailURL}" class="btn btn-outline-info">
+														<i class="mdi mdi-pencil-box-multiple-outline"></i>
+												</a> <c:url var="deleteURL" value="/admin/order/delete">
+														<c:param name="id" value="${order.id}" />
+													</c:url> <a href="${deleteURL}" class="btn btn-outline-danger">
+														<i class=" mdi mdi-window-close"></i>
+												</a></td>
+											</tr>
         									</c:forEach>
         								</tbody>
         							</table>
