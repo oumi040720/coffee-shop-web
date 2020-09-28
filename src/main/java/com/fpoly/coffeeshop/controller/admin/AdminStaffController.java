@@ -1,6 +1,7 @@
 package com.fpoly.coffeeshop.controller.admin;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fpoly.coffeeshop.model.Staff;
+import com.fpoly.coffeeshop.model.StaffLog;
 import com.fpoly.coffeeshop.model.User;
 import com.fpoly.coffeeshop.util.DomainUtil;
 
@@ -113,11 +115,17 @@ public class AdminStaffController {
 		return "admin/staff/edit";
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value = "/save")
 	public String save(Model model, @ModelAttribute Staff staff) {
 		String url = getDomain() + "/staff";
+		String logUrl = getDomain() + "/staff_log/insert";
 		String message = "";
 		String alert = "danger";
+		
+		Boolean logResult = false;
+		
+		StaffLog log = new StaffLog();
 		
 		RestTemplate restTemplate = new RestTemplate();
 		
@@ -126,16 +134,48 @@ public class AdminStaffController {
 		if (staff.getId() == null) {
 			url += "/insert";
 			
-			Boolean result = restTemplate.postForObject(url, staff, Boolean.class);
+			Staff result = restTemplate.postForObject(url, staff, Staff.class);
 			
-			if (result) {
+			log.setStaffID(result.getId());
+			log.setCreatedBy("admin");
+			log.setCreatedDate(new Date(System.currentTimeMillis()));
+			
+			logResult = restTemplate.postForObject(logUrl, log, Boolean.class);
+			
+			if (result != null) {
 				message = "message_staff_insert_success";
 				alert = "success";
 			} else {
 				message = "message_staff_insert_fail";
+				alert = "danger";
+			}
+			
+			if (!logResult) {
+				message = "message_staff_insert_fail";
+				alert = "danger";
 			}
 		} else {
+			String urlGetOne = getDomain() + "/staff/id/" + staff.getId();
+			
 			url += "/update?id=" + staff.getId();
+			
+			Staff result = restTemplate.getForEntity(urlGetOne, Staff.class).getBody();
+			
+			log.setStaffID(result.getId());
+			log.setOldAddress(result.getAddress());
+			log.setOldBirthday(result.getBirthday());
+			log.setOldEmail(result.getEmail());
+			log.setOldFlagDelete(result.getFlagDelete());
+			log.setOldFullname(result.getFullname());
+			log.setOldPhone(result.getPhone());
+			log.setOldPhoto(result.getPhoto());
+			log.setOldUsername(result.getUsername());
+			log.setModifiedBy("admin");
+			log.setCreatedDate(new Date(System.currentTimeMillis()));
+			log.setCreatedBy("admin");
+			log.setCreatedDate(new Date(System.currentTimeMillis()));
+			
+			logResult = restTemplate.postForObject(logUrl, log, Boolean.class);
 			
 			try {
 				restTemplate.put(url, staff);
@@ -155,15 +195,36 @@ public class AdminStaffController {
 	
 	@RequestMapping(value = "/delete")
 	public String delete(Model model, @RequestParam("id") Long id) {
+		String logUrl = getDomain() + "/staff_log/insert";
 		String url = getDomain() + "/staff/id/" + id;
+		
 		String message = "";
 		String alert = "danger";
+		
+		StaffLog log = new StaffLog();
 		
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<Staff> reusult = restTemplate.getForEntity(url, Staff.class);
 		Staff staff = reusult.getBody();
 		
 		String deleteURL = getDomain() + "/staff/update?id=" + staff.getId();
+		
+		log.setStaffID(staff.getId());
+		log.setOldAddress(staff.getAddress());
+		log.setOldBirthday(staff.getBirthday());
+		log.setOldEmail(staff.getEmail());
+		log.setOldFlagDelete(staff.getFlagDelete());
+		log.setOldFullname(staff.getFullname());
+		log.setOldPhone(staff.getPhone());
+		log.setOldPhoto(staff.getPhoto());
+		log.setOldUsername(staff.getUsername());
+		log.setModifiedBy("admin");
+		log.setCreatedDate(new Date(System.currentTimeMillis()));
+		log.setCreatedBy("admin");
+		log.setCreatedDate(new Date(System.currentTimeMillis()));
+		
+		Boolean logResult = restTemplate.postForObject(logUrl, log, Boolean.class);
+
 		
 		try {
 			staff.setFlagDelete(true);
@@ -173,6 +234,15 @@ public class AdminStaffController {
 			alert = "success";
 		} catch (Exception e) {
 			message = "message_staff_delete_fail";
+			alert = "danger";
+		}
+		
+		if (logResult) {
+			message = "message_staff_delete_success";
+			alert = "success";
+		} else {
+			message = "message_staff_delete_fail";
+			alert = "danger";
 		}
 		
 		model.addAttribute("message", message);
